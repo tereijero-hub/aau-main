@@ -1,0 +1,23 @@
+
+name: AAU Auto Intelligence Update
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - run: pip install yfinance pandas
+      - run: python .github/scripts/generate_insight.py
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add commercial_product_v1.json
+          git commit -m "AAU Intelligence Update [skip ci]" || exit 0
+          git push
