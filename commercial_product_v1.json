@@ -1,301 +1,301 @@
 [
     {
         "id": 0,
-        "val": 2.19003,
+        "val": 2.22806,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 1,
-        "val": 2.23624,
+        "val": 2.22036,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 2,
-        "val": 2.34046,
+        "val": 2.21265,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 3,
-        "val": 2.27012,
+        "val": 2.26321,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 4,
-        "val": 2.35076,
+        "val": 2.19546,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 5,
-        "val": 2.30218,
+        "val": 2.27536,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 6,
-        "val": 2.17499,
+        "val": 2.27729,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 7,
-        "val": 2.33792,
+        "val": 2.19831,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 8,
-        "val": 2.3426,
+        "val": 2.18531,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 9,
-        "val": 2.25041,
+        "val": 2.23746,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 10,
-        "val": 2.32777,
+        "val": 2.24217,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 11,
-        "val": 2.23551,
+        "val": 2.31955,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 12,
-        "val": 2.20812,
+        "val": 2.28102,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 13,
-        "val": 2.28671,
+        "val": 2.36977,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 14,
-        "val": 2.32821,
+        "val": 2.36372,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 15,
-        "val": 2.26657,
+        "val": 2.32239,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 16,
-        "val": 2.2358,
+        "val": 2.32781,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 17,
-        "val": 2.37248,
+        "val": 2.27627,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 18,
-        "val": 2.31323,
+        "val": 2.3497,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 19,
-        "val": 2.17843,
+        "val": 2.25179,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 20,
-        "val": 2.25929,
+        "val": 2.23177,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 21,
-        "val": 2.30533,
+        "val": 2.20292,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 22,
-        "val": 2.30371,
+        "val": 2.27632,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 23,
-        "val": 2.32486,
+        "val": 2.364,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 24,
-        "val": 2.21891,
+        "val": 2.32841,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 25,
-        "val": 2.24265,
+        "val": 2.33421,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 26,
-        "val": 2.19368,
+        "val": 2.22435,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 27,
-        "val": 2.29266,
+        "val": 2.18118,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 28,
-        "val": 2.29531,
+        "val": 2.27303,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 29,
-        "val": 2.35314,
+        "val": 2.27347,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 30,
-        "val": 2.2285,
+        "val": 2.32521,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 31,
-        "val": 2.2539,
+        "val": 2.30839,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 32,
-        "val": 2.31587,
+        "val": 2.34105,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 33,
-        "val": 2.17413,
+        "val": 2.3538,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 34,
-        "val": 2.36744,
+        "val": 2.33624,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 35,
-        "val": 2.20861,
+        "val": 2.1934,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 36,
-        "val": 2.2915,
+        "val": 2.29538,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 37,
-        "val": 2.36157,
+        "val": 2.30873,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 38,
-        "val": 2.30084,
+        "val": 2.28523,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 39,
-        "val": 2.27169,
+        "val": 2.18377,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 40,
-        "val": 2.35473,
+        "val": 2.29658,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 41,
-        "val": 2.22481,
+        "val": 2.19157,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 42,
-        "val": 2.32087,
+        "val": 2.30847,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 43,
-        "val": 2.19606,
+        "val": 2.33808,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 44,
-        "val": 2.18367,
+        "val": 2.31991,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 45,
-        "val": 2.19348,
+        "val": 2.28823,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 46,
-        "val": 2.32773,
+        "val": 2.28313,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 47,
-        "val": 2.25651,
+        "val": 2.33433,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 48,
-        "val": 2.23131,
+        "val": 2.25704,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     },
     {
         "id": 49,
-        "val": 2.31144,
+        "val": 2.2182,
         "channel": "OKAYAMA",
         "synced_at": "2026-03-15T05:46:43.016369"
     }
