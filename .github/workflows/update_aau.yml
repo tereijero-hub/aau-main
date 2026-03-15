@@ -12,8 +12,6 @@ jobs:
     steps:
     - name: 帝国全兵装の展開
       uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
 
     - name: 演算環境の構築
       uses: actions/setup-python@v4
@@ -23,24 +21,30 @@ jobs:
     - name: 依存ライブラリの換装
       run: pip install numpy && if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: 🚨 帝国演算の執行
+    - name: 🚨 帝国演算の執行 (10体エージェント)
       run: |
         rm -f internal_core_data.json
-        python aau_main.py  # 10体エージェントの演算
+        python aau_main.py 
       env:
         STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
 
-    - name: 📡 司令室リポジトリへの強制転送 (Cross-Repo Sync)
+    - name: 📡 司令室リポジトリへの強制転送 (物流プロトコル)
       run: |
-        # 別リポジトリ「-」をクローン
-        git clone https://${{ secrets.EMPIRE_TOKEN }}@github.com/tereijero-hub/-.git target_repo
+        # 1. 通行証(EMPIRE_TOKEN)を使用して司令室リポジトリをクローン
+        git clone https://x-access-token:${{ secrets.EMPIRE_TOKEN }}@github.com/tereijero-hub/-.git target_repo
         
-        # 演算結果(JSON)を転送
+        # 2. 演算結果を確実に配置
         cp internal_core_data.json target_repo/
         
+        # 3. 司令室側でコミット＆プッシュを実行
         cd target_repo
         git config --local user.email "action@github.com"
         git config --local user.name "Empire-Bot"
-        git add .
+        git add internal_core_data.json
         git commit -m "📦 Data Update from aau-main [skip ci]" || echo "No changes"
+        
+        # 4. 強制プッシュで歴史の衝突を回避
         git push origin main --force
+      env:
+        # ここでSecretに登録したトークンを使用
+        GITHUB_TOKEN: ${{ secrets.EMPIRE_TOKEN }}
