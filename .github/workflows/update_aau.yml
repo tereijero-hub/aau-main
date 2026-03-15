@@ -1,23 +1,46 @@
+name: AAU v120.0 Core-Brain Operations
 
-name: AAU Auto Intelligence Update
 on:
+  push:
+    branches: [ main ]
   schedule:
     - cron: '0 * * * *'
-  workflow_dispatch:
+
 jobs:
-  update-data:
+  brain-execution:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-      - run: pip install yfinance pandas
-      - run: python .github/scripts/generate_insight.py
-      - name: Commit and Push
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add commercial_product_v1.json
-          git commit -m "AAU Intelligence Update [skip ci]" || exit 0
-          git push
+    - name: 帝国全兵装の展開
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: 演算環境の構築
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: 依存ライブラリの換装
+      run: pip install numpy && if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: 🚨 帝国演算の執行
+      run: |
+        rm -f internal_core_data.json
+        python aau_main.py  # 10体エージェントの演算
+      env:
+        STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
+
+    - name: 📡 司令室リポジトリへの強制転送 (Cross-Repo Sync)
+      run: |
+        # 別リポジトリ「-」をクローン
+        git clone https://${{ secrets.EMPIRE_TOKEN }}@github.com/tereijero-hub/-.git target_repo
+        
+        # 演算結果(JSON)を転送
+        cp internal_core_data.json target_repo/
+        
+        cd target_repo
+        git config --local user.email "action@github.com"
+        git config --local user.name "Empire-Bot"
+        git add .
+        git commit -m "📦 Data Update from aau-main [skip ci]" || echo "No changes"
+        git push origin main --force
