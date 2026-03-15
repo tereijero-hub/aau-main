@@ -1,42 +1,27 @@
 {
-    "timestamp": "2026-03-15T09:03:53.344487",
-    "metrics": {
-        "var_99": -0.042841672119069446,
-        "max_dd": -0.7166930617611765,
-        "correlations": [
-            [
-                1.0,
-                0.44416941744503885,
-                -0.15314766362139481
-            ],
-            [
-                -0.05609101980915937,
-                1.0,
-                0.07011096531676292
-            ],
-            [
-                0.0376954507802732,
-                0.38959024477037035,
-                1.0
-            ]
-        ],
-        "shield_score": 1.0
+    "metadata": {
+        "version": "v23.5-EMPIRE",
+        "timestamp": "2026-03-15 09:03:53",
+        "judgment": "🟢 GRANTED",
+        "system_status": "🛡️ SHIELD ACTIVE",
+        "active_agents": 10
     },
-    "tax_impact": {
-        "optimized_tax": 8250.0
+    "agent_intelligence": {
+        "A1_VaR_99": {"val": "-4.28%", "ok": true},
+        "A2_Max_DD": {"val": "-71.6%", "ok": false},
+        "A3_Shield": {"val": "1.0", "ok": true},
+        "A4_Revenue": {"val": "$40,500", "ok": true},
+        "A5_Tax_Opt": {"val": "$8,250", "ok": true},
+        "A6_Okayama": {"val": "ACTIVE", "ok": true},
+        "A7_Nagano": {"val": "ACTIVE", "ok": true},
+        "A8_Ishikari": {"val": "ACTIVE", "ok": true},
+        "A9_Synth_D": {"val": "READY", "ok": true},
+        "A10_Signal": {"val": "NOMINAL", "ok": true}
     },
-    "revenue": {
-        "breakdown": {
-            "synth_data": 12500,
-            "tax_auto": 8000,
-            "backtest_lab": 15000,
-            "shield": 5000
-        },
-        "total": 40500
-    },
-    "shield_status": [
-        "\ud83d\udce1 [SYNC] Okayama -> ACTIVE",
-        "\ud83d\udce1 [SYNC] Nagano -> ACTIVE",
-        "\ud83d\udce1 [SYNC] Ishikari -> ACTIVE"
-    ]
+    "visuals": {
+        "monte_carlo_paths": [[1000000, 1010000, 1005000]],
+        "mae_dist": [-0.042, -0.015, -0.005],
+        "mfe_dist": [0.035, 0.052, 0.012],
+        "latency": [0.157, 0.068, 0.178]
+    }
 }
