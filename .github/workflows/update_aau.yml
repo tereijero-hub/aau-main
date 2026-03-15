@@ -4,31 +4,38 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'internal_core_data.json' # データ着弾を監視
-  workflow_dispatch: # 手動テスト用
+      - 'internal_core_data.json'
+  workflow_dispatch: # 手動実行用
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # 🚨 ここでGitHub Actionsに書き込み権限を明示的に与えます
     permissions:
-      contents: write # サイト更新の書き込み権限
+      contents: write
+      
     steps:
-      - name: 拠点資産の展開
+      - name: 1. 拠点資産の展開
         uses: actions/checkout@v3
 
-      - name: 演算環境の構築
+      - name: 2. 演算環境の構築
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: 🚀 表示更新の執行
+      - name: 3. 🚀 表示更新の執行
         run: |
+          # 最新の py を実行して index.html を生成
           python aau_dashboard.py
 
-      - name: 📡 最新ダッシュボードの公開
+      - name: 4. 📡 最新ダッシュボードの強制反映
         run: |
           git config user.name "Empire-Bot"
           git config user.email "bot@empire.com"
+          
+          # 変更があるか確認
           git add index.html
+          
+          # コミットしてプッシュ。GitHub標準のGITHUB_TOKENを使用して権限問題を突破
           git commit -m "📦 Dashboard Update [skip ci]" || exit 0
           git push origin main
