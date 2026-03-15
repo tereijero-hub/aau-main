@@ -11,7 +11,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 漆黒CSS
+# 漆黒CSS（視認性極大化）
 st.markdown("""
     <style>
     .stApp { background-color: #000000 !important; }
@@ -26,7 +26,7 @@ st.markdown("""
     }
     div[data-testid="stMetricValue"] {
         color: #ffffff !important;
-        font-family: 'JetBrains Mono', monospace !important;
+        font-family: monospace !important;
         font-weight: 900 !important;
         font-size: 2.4rem !important;
     }
@@ -114,18 +114,25 @@ with t1:
         line_color = "#00ff41" if p[-1] > p[0] else "#ff3131"
         fig_mc.add_trace(go.Scatter(
             y=p, mode='lines', 
-            line=dict(width=1.8, color=line_color), 
-            opacity=0.45, showlegend=False
+            line=dict(width=2.0, color=line_color), 
+            opacity=0.5, showlegend=False
         ))
     if len(paths) > 0:
         avg_path = np.mean(paths, axis=0)
         fig_mc.add_trace(go.Scatter(
             y=avg_path, mode='lines', 
-            line=dict(width=4.5, color='#ffffff'), 
+            line=dict(width=5.0, color='#ffffff'), 
             name="MEAN"
         ))
     fig_mc.update_layout(height=650, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black', margin=dict(l=10,r=10,t=10,b=10))
     st.plotly_chart(fig_mc, width='stretch')
 
 with t2:
-    fig
+    fig_tr = go.Figure(go.Scatter(x=visuals.get("mae_dist", []), y=visuals.get("mfe_dist", []), mode='markers', marker=dict(size=14, color='#58a6ff', symbol='square-open', line=dict(width=2, color='#ffffff'))))
+    fig_tr.update_layout(height=650, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black')
+    st.plotly_chart(fig_tr, width='stretch')
+
+with t3:
+    fig_la = go.Figure(go.Bar(x=["Ishikari", "Matsumoto", "Okayama"], y=visuals.get("latency", []), marker_color='#58a6ff'))
+    fig_la.update_layout(height=650, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black')
+    st.plotly_chart(fig_la, width='stretch')
