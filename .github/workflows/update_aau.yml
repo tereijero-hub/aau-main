@@ -1,43 +1,27 @@
-name: AAU v120.0 Core-Brain Operations
+name: AUTO-DISPLAY-SYNC
 
 on:
   push:
     branches: [ main ]
-  schedule:
-    - cron: '0 * * * *'
-  workflow_dispatch:
+    paths:
+      - 'internal_core_data.json' # これが更新された時だけ動く
 
 jobs:
-  brain-execution:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - name: 帝国全兵装の展開
-      uses: actions/checkout@v3
-
-    - name: 演算環境の構築
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-
-    - name: 依存ライブラリの換装
-      run: pip install numpy && if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-    - name: 🚨 帝国演算の執行 (10体エージェント)
-      run: |
-        rm -f internal_core_data.json
-        python aau_main.py 
-      env:
-        STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
-
-    - name: 📡 司令室リポジトリへの強制転送 (認証・物流プロトコル)
-      run: |
-        git clone https://x-access-token:${{ secrets.EMPIRE_TOKEN }}@github.com/tereijero-hub/-.git target_repo
-        cp internal_core_data.json target_repo/
-        cd target_repo
-        git config --local user.email "action@github.com"
-        git config --local user.name "Empire-Bot"
-        git add internal_core_data.json
-        git commit -m "📦 Data Update from aau-main [skip ci]" || echo "No changes"
-        git push https://x-access-token:${{ secrets.EMPIRE_TOKEN }}@github.com/tereijero-hub/-.git main --force
-      env:
-        GITHUB_TOKEN: ${{ secrets.EMPIRE_TOKEN }}
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: 🚀 表示更新
+        run: python aau_dashboard.py
+        
+      - name: 📡 GitHub Pagesへ反映
+        run: |
+          git config user.name "Empire-Bot"
+          git config user.email "bot@empire.com"
+          git add index.html
+          git commit -m "📦 Display synchronized with core data [skip ci]" || echo "No changes"
+          git push origin main
