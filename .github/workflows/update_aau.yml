@@ -5,6 +5,7 @@ on:
     branches: [ main ]
   schedule:
     - cron: '0 * * * *'
+  workflow_dispatch:
 
 jobs:
   brain-execution:
@@ -28,23 +29,15 @@ jobs:
       env:
         STRIPE_API_KEY: ${{ secrets.STRIPE_API_KEY }}
 
-    - name: 📡 司令室リポジトリへの強制転送 (物流プロトコル)
+    - name: 📡 司令室リポジトリへの強制転送 (認証・物流プロトコル)
       run: |
-        # 1. 通行証(EMPIRE_TOKEN)を使用して司令室リポジトリをクローン
         git clone https://x-access-token:${{ secrets.EMPIRE_TOKEN }}@github.com/tereijero-hub/-.git target_repo
-        
-        # 2. 演算結果を確実に配置
         cp internal_core_data.json target_repo/
-        
-        # 3. 司令室側でコミット＆プッシュを実行
         cd target_repo
         git config --local user.email "action@github.com"
         git config --local user.name "Empire-Bot"
         git add internal_core_data.json
         git commit -m "📦 Data Update from aau-main [skip ci]" || echo "No changes"
-        
-        # 4. 強制プッシュで歴史の衝突を回避
-        git push origin main --force
+        git push https://x-access-token:${{ secrets.EMPIRE_TOKEN }}@github.com/tereijero-hub/-.git main --force
       env:
-        # ここでSecretに登録したトークンを使用
         GITHUB_TOKEN: ${{ secrets.EMPIRE_TOKEN }}
