@@ -1,46 +1,20 @@
-name: EMPIRE-DISPLAY-FORCE-UPDATE
+name: 🛰️ EMPIRE-DISPLAY-DATA-WATCH
 
 on:
   push:
-    branches: [ main ]
-    # jsonが届いた時、またはプログラム自体が変わった時に発動
-    paths-ignore:
-      - 'index.html' 
+    paths:
+      - 'internal_core_data.json' # データが届いた時だけ反応
   workflow_dispatch:
 
 jobs:
-  deploy:
+  monitor:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - name: 1. 拠点資産の展開
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+      - name: 📥 データ受信の確認
+        uses: actions/checkout@v4
 
-      - name: 2. 演算環境の構築
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: 3. 🚀 index.htmlの強制再生成
+      - name: 🔍 データの健全性チェック
         run: |
-          # 確実に最新のプログラムを走らせる
-          python aau_dashboard.py
-
-      - name: 4. 📡 帝国サーバーへの強制同期
-        run: |
-          git config user.name "Empire-Bot"
-          git config user.email "bot@empire.com"
-          
-          # 生成されたindex.htmlをステージング
-          git add index.html
-          
-          # 変化があればコミットしてプッシュ
-          if ! git diff --cached --exit-code; then
-            git commit -m "🔥 FORCE-UPDATE: Dashboard Synchronized [skip ci]"
-            git push origin main --force
-          else
-            echo "No changes in index.html"
-          fi
+          echo "📡 最新のインテリジェンス（JSON）を受信しました。"
+          cat internal_core_data.json | jq .metadata
+          echo "✅ ダッシュボード（Streamlit）への反映準備完了。"
