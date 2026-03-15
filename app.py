@@ -11,52 +11,51 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# 完璧な黒と視認性を両立したCSS
+# 漆黒とネオンのコントラストを極限まで高めたCSS
 st.markdown("""
     <style>
     .stApp { background-color: #000000 !important; }
     header[data-testid="stHeader"] { background: rgba(0,0,0,0) !important; }
     .main { color: #ffffff !important; }
     
-    /* メトリック装飾 */
+    /* メトリック装飾：数値を巨大かつ太く */
     div[data-testid="stMetric"] {
         background-color: #000000 !important;
         border: 1px solid #1f2328 !important;
-        border-left: 4px solid #58a6ff !important;
-        padding: 10px !important;
+        border-left: 5px solid #58a6ff !important;
+        padding: 15px !important;
     }
     div[data-testid="stMetricValue"] {
         color: #ffffff !important;
-        font-family: monospace !important;
+        font-family: 'JetBrains Mono', monospace !important;
         font-weight: 900 !important;
-        font-size: 2.0rem !important;
+        font-size: 2.4rem !important;
     }
     div[data-testid="stMetricLabel"] {
         color: #58a6ff !important;
         font-weight: bold !important;
-        font-size: 0.7rem !important;
-        text-transform: uppercase !important;
+        letter-spacing: 0.1rem !important;
     }
 
-    /* エージェントカード */
+    /* エージェントカード：プロの視認性 */
     .agent-card {
         background-color: #000000;
-        border: 1px solid #1f2328;
-        padding: 10px;
-        border-radius: 2px;
+        border: 2px solid #1f2328;
+        padding: 12px;
+        border-radius: 4px;
         text-align: center;
-        margin-bottom: 5px;
+        margin-bottom: 10px;
     }
-    .agent-name { color: #8b949e; font-size: 0.6rem; font-weight: bold; }
-    .agent-value { color: #ffffff; font-size: 1.0rem; font-weight: 800; margin: 3px 0; }
-    .status-ok { color: #00ff41 !important; text-shadow: 0 0 5px #00ff41; font-weight: bold; font-size: 0.7rem; }
-    .status-ng { color: #ff3131 !important; text-shadow: 0 0 5px #ff3131; font-weight: bold; font-size: 0.7rem; }
+    .agent-name { color: #8b949e; font-size: 0.7rem; font-weight: bold; }
+    .agent-value { color: #ffffff; font-size: 1.2rem; font-weight: 900; margin: 5px 0; }
+    .status-ok { color: #00ff41 !important; text-shadow: 0 0 10px #00ff41; font-weight: 900; }
+    .status-ng { color: #ff3131 !important; text-shadow: 0 0 10px #ff3131; font-weight: 900; }
 
     /* タブの漆黒化 */
-    div[data-baseweb="tab-list"] { background-color: #000000 !important; }
-    button[data-baseweb="tab"] { color: #8b949e !important; font-weight: bold !important; background-color: transparent !important; }
+    div[data-baseweb="tab-list"] { background-color: #000000 !important; border-bottom: 1px solid #30363d !important; }
+    button[data-baseweb="tab"] { color: #8b949e !important; font-weight: bold !important; font-size: 1rem !important; }
     button[aria-selected="true"] { color: #ffffff !important; border-bottom-color: #58a6ff !important; }
-    hr { border-color: #1f2328 !important; }
+    hr { border-color: #1f2328 !important; border-width: 2px !important; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -71,7 +70,7 @@ def load_data():
 
 data = load_data()
 if not data:
-    st.error("DATABASE OFFLINE")
+    st.error("DATABASE SIGNAL INTERRUPTED")
     st.stop()
 
 meta = data.get("metadata", {})
@@ -79,17 +78,17 @@ agents = data.get("agent_intelligence", {})
 visuals = data.get("visuals", {})
 
 # --- [HEADER] ---
-st.markdown("<h3 style='color: #ffffff; font-family: monospace;'>&gt; MISSION_CONTROL_SYS_v24.0</h3>", unsafe_allow_html=True)
+st.markdown("<h2 style='color: #ffffff; font-family: monospace; font-weight: 900;'>&gt; MISSION_CONTROL_SYS_v24.0</h2>", unsafe_allow_html=True)
 
 c1, c2, c3, c4 = st.columns(4)
 c1.metric("JUDGMENT", meta.get("judgment", "N/A"))
-c2.metric("SHIELD", meta.get("system_status", "N/A"))
-c3.metric("AGENTS", f"{meta.get('active_agents', 0)} / 10")
-c4.metric("PULSE", meta.get("timestamp", "0:0:0").split(" ")[-1])
+c2.metric("CORE_SHIELD", meta.get("system_status", "N/A"))
+c3.metric("AGENT_LOAD", f"{meta.get('active_agents', 0)} / 10")
+c4.metric("LAST_PULSE", meta.get("timestamp", "0:0:0").split(" ")[-1])
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# --- [BODY: AGENTS] ---
+# --- [BODY: AGENTS GRID] ---
 agent_cols = st.columns(5)
 agent_items = list(agents.items())
 
@@ -99,8 +98,7 @@ for i in range(10):
             name, info = agent_items[i]
             is_ok = info.get("ok", True)
             cls = "status-ok" if is_ok else "status-ng"
-            sym = "▣ NOMINAL" if is_ok else "☒ ALERT"
-            # 修正箇所: 以下のブロックの閉じ引用符を確実に挿入
+            sym = "▣ ACTIVE" if is_ok else "☒ ALERT"
             st.markdown(f"""
             <div class="agent-card">
                 <div class="agent-name">{name}</div>
@@ -109,26 +107,27 @@ for i in range(10):
             </div>
             """, unsafe_allow_html=True)
 
-# --- [LAYER 3: ANALYTICS] ---
+# --- [LAYER 3: ANALYTICS (強化描画プロトコル)] ---
 st.write("")
-t1, t2, t3 = st.tabs(["[ FORECAST ]", "[ DISTRIBUTION ]", "[ LATENCY ]"])
+t1, t2, t3 = st.tabs(["[ 01_FORECAST ]", "[ 02_DISTRIBUTION ]", "[ 03_LATENCY ]"])
 
 with t1:
     fig_mc = go.Figure()
     paths = np.array(visuals.get("monte_carlo_paths", [[0,0]]))
+    
+    # 線の太さと透明度を極大化
     for p in paths:
-        fig_mc.add_trace(go.Scatter(y=p, mode='lines', line=dict(width=0.7, color='#00ff41'), opacity=0.2, showlegend=False))
-    fig_mc.update_layout(height=600, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black', margin=dict(l=0,r=0,t=0,b=0))
-    st.plotly_chart(fig_mc, width='stretch')
-
-with t2:
-    fig_tr = go.Figure(go.Scatter(x=visuals.get("mae_dist", []), y=visuals.get("mfe_dist", []), mode='markers', marker=dict(size=12, color='#58a6ff', symbol='square-open', line=dict(width=1, color='#ffffff'))))
-    fig_tr.update_layout(height=600, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black')
-    st.plotly_chart(fig_tr, width='stretch')
-
-with t3:
-    fig_la = go.Figure(go.Bar(x=["Ishikari", "Matsumoto", "Okayama"], y=visuals.get("latency", []), marker_color='#58a6ff'))
-    fig_la.update_layout(height=600, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black')
-    st.plotly_chart(fig_la, width='stretch')
-
-st.markdown("<div style='text-align: right; color: #1f2328; font-size: 0.5rem;'>EMPIRE_PROPERTY_CONFIDENTIAL</div>", unsafe_allow_html=True)
+        color = "#00ff41" if p[-1] > p[0] else "#ff3131"
+        fig_mc.add_trace(go.Scatter(
+            y=p, mode='lines', 
+            line=dict(width=1.8, color=color), # 太さを1.8に強化
+            opacity=0.45,                      # 透明度を0.45に強化
+            showlegend=False
+        ))
+    
+    # 期待値（中央線）を極太の白で描写
+    if len(paths) > 0:
+        avg_path = np.mean(paths, axis=0)
+        fig_mc.add_trace(go.Scatter(
+            y=avg_path, mode='lines', 
+            line=dict(width=4.
