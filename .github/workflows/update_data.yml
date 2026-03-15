@@ -1,0 +1,31 @@
+name: Empire Data Auto Update
+
+on:
+  push:
+    branches: [ main ]  # mainブランチが更新されたら発動
+  workflow_dispatch:      # 手動でボタンを押しても発動
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: pip install numpy
+        
+      - name: Run Empire Brain
+        run: python aau_main.py
+        
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add internal_core_data.json
+          git commit -m "Auto-update: 100 Paths Generated" || exit 0
+          git push
