@@ -1,16 +1,602 @@
-{
-    "product_metadata": {
-        "update_time": "2026-03-14 23:54:14"
+[
+    {
+        "step": 0,
+        "synthetic_price": 4.2881,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
     },
-    "real_time_analysis": {
-        "current_z_score": -2.75,
-        "current_price": 6632.19
+    {
+        "step": 1,
+        "synthetic_price": 4.2728,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
     },
-    "agent_insights": {
-        "critique_agent": "安定稼働中。",
-        "execution_agent": "全ノード同期済み。"
+    {
+        "step": 2,
+        "synthetic_price": 4.2676,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
     },
-    "infrastructure_proof": {
-        "multi_node_sync": "Verified (Ishikari/Matsumoto/Okayama)"
+    {
+        "step": 3,
+        "synthetic_price": 4.2635,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 4,
+        "synthetic_price": 4.3107,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 5,
+        "synthetic_price": 4.2797,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 6,
+        "synthetic_price": 4.301,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 7,
+        "synthetic_price": 4.2525,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 8,
+        "synthetic_price": 4.3172,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 9,
+        "synthetic_price": 4.3042,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 10,
+        "synthetic_price": 4.3164,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 11,
+        "synthetic_price": 4.2535,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 12,
+        "synthetic_price": 4.3184,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 13,
+        "synthetic_price": 4.2975,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 14,
+        "synthetic_price": 4.3174,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 15,
+        "synthetic_price": 4.2822,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 16,
+        "synthetic_price": 4.2979,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 17,
+        "synthetic_price": 4.2779,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 18,
+        "synthetic_price": 4.281,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 19,
+        "synthetic_price": 4.3066,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 20,
+        "synthetic_price": 4.2669,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 21,
+        "synthetic_price": 4.285,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 22,
+        "synthetic_price": 4.266,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 23,
+        "synthetic_price": 4.296,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 24,
+        "synthetic_price": 4.2658,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 25,
+        "synthetic_price": 4.2657,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 26,
+        "synthetic_price": 4.3243,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 27,
+        "synthetic_price": 4.2922,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 28,
+        "synthetic_price": 4.2976,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 29,
+        "synthetic_price": 4.2538,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 30,
+        "synthetic_price": 4.3116,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 31,
+        "synthetic_price": 4.3154,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 32,
+        "synthetic_price": 4.2869,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 33,
+        "synthetic_price": 4.2621,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 34,
+        "synthetic_price": 4.2697,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 35,
+        "synthetic_price": 4.3058,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 36,
+        "synthetic_price": 4.2542,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 37,
+        "synthetic_price": 4.2526,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 38,
+        "synthetic_price": 4.2789,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 39,
+        "synthetic_price": 4.3155,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 40,
+        "synthetic_price": 4.2566,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 41,
+        "synthetic_price": 4.2569,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 42,
+        "synthetic_price": 4.3208,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 43,
+        "synthetic_price": 4.2956,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 44,
+        "synthetic_price": 4.2811,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 45,
+        "synthetic_price": 4.3179,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 46,
+        "synthetic_price": 4.2756,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 47,
+        "synthetic_price": 4.3003,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 48,
+        "synthetic_price": 4.3169,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 49,
+        "synthetic_price": 4.2644,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 50,
+        "synthetic_price": 4.311,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 51,
+        "synthetic_price": 4.2817,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 52,
+        "synthetic_price": 4.2629,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 53,
+        "synthetic_price": 4.265,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 54,
+        "synthetic_price": 4.2796,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 55,
+        "synthetic_price": 4.2782,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 56,
+        "synthetic_price": 4.2926,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 57,
+        "synthetic_price": 4.2454,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 58,
+        "synthetic_price": 4.3089,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 59,
+        "synthetic_price": 4.2731,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 60,
+        "synthetic_price": 4.3013,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 61,
+        "synthetic_price": 4.2517,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 62,
+        "synthetic_price": 4.3128,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 63,
+        "synthetic_price": 4.2703,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 64,
+        "synthetic_price": 4.2737,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 65,
+        "synthetic_price": 4.2738,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 66,
+        "synthetic_price": 4.2645,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 67,
+        "synthetic_price": 4.2864,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 68,
+        "synthetic_price": 4.2559,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 69,
+        "synthetic_price": 4.3088,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 70,
+        "synthetic_price": 4.3019,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 71,
+        "synthetic_price": 4.3146,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 72,
+        "synthetic_price": 4.2887,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 73,
+        "synthetic_price": 4.2736,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 74,
+        "synthetic_price": 4.2528,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 75,
+        "synthetic_price": 4.3112,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 76,
+        "synthetic_price": 4.264,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 77,
+        "synthetic_price": 4.3227,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 78,
+        "synthetic_price": 4.252,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 79,
+        "synthetic_price": 4.278,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 80,
+        "synthetic_price": 4.3206,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 81,
+        "synthetic_price": 4.3048,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 82,
+        "synthetic_price": 4.2486,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 83,
+        "synthetic_price": 4.2501,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 84,
+        "synthetic_price": 4.2806,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 85,
+        "synthetic_price": 4.2599,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 86,
+        "synthetic_price": 4.288,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 87,
+        "synthetic_price": 4.314,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 88,
+        "synthetic_price": 4.3207,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 89,
+        "synthetic_price": 4.2746,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 90,
+        "synthetic_price": 4.2558,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 91,
+        "synthetic_price": 4.3262,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 92,
+        "synthetic_price": 4.2501,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 93,
+        "synthetic_price": 4.3246,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 94,
+        "synthetic_price": 4.2868,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 95,
+        "synthetic_price": 4.2852,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 96,
+        "synthetic_price": 4.3241,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 97,
+        "synthetic_price": 4.2589,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 98,
+        "synthetic_price": 4.272,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
+    },
+    {
+        "step": 99,
+        "synthetic_price": 4.3192,
+        "node": "\u5ca1\u5c71",
+        "time": "2026-03-15 05:12"
     }
-}
+]
