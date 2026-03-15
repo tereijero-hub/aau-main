@@ -4,21 +4,20 @@ import json
 import numpy as np
 from datetime import datetime
 
-# --- [LAYER 1: 究極の暗黒設定] ---
+# --- [LAYER 1: 設定] ---
 st.set_page_config(
     page_title="AAU EMPIRE | MISSION CONTROL",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# 漆黒とネオンのコントラストを極限まで高めたCSS
+# 漆黒CSS
 st.markdown("""
     <style>
     .stApp { background-color: #000000 !important; }
     header[data-testid="stHeader"] { background: rgba(0,0,0,0) !important; }
     .main { color: #ffffff !important; }
     
-    /* メトリック装飾：数値を巨大かつ太く */
     div[data-testid="stMetric"] {
         background-color: #000000 !important;
         border: 1px solid #1f2328 !important;
@@ -34,10 +33,8 @@ st.markdown("""
     div[data-testid="stMetricLabel"] {
         color: #58a6ff !important;
         font-weight: bold !important;
-        letter-spacing: 0.1rem !important;
     }
 
-    /* エージェントカード：プロの視認性 */
     .agent-card {
         background-color: #000000;
         border: 2px solid #1f2328;
@@ -51,7 +48,6 @@ st.markdown("""
     .status-ok { color: #00ff41 !important; text-shadow: 0 0 10px #00ff41; font-weight: 900; }
     .status-ng { color: #ff3131 !important; text-shadow: 0 0 10px #ff3131; font-weight: 900; }
 
-    /* タブの漆黒化 */
     div[data-baseweb="tab-list"] { background-color: #000000 !important; border-bottom: 1px solid #30363d !important; }
     button[data-baseweb="tab"] { color: #8b949e !important; font-weight: bold !important; font-size: 1rem !important; }
     button[aria-selected="true"] { color: #ffffff !important; border-bottom-color: #58a6ff !important; }
@@ -88,7 +84,7 @@ c4.metric("LAST_PULSE", meta.get("timestamp", "0:0:0").split(" ")[-1])
 
 st.markdown("<hr>", unsafe_allow_html=True)
 
-# --- [BODY: AGENTS GRID] ---
+# --- [BODY: AGENTS] ---
 agent_cols = st.columns(5)
 agent_items = list(agents.items())
 
@@ -107,27 +103,29 @@ for i in range(10):
             </div>
             """, unsafe_allow_html=True)
 
-# --- [LAYER 3: ANALYTICS (強化描画プロトコル)] ---
+# --- [LAYER 3: ANALYTICS] ---
 st.write("")
 t1, t2, t3 = st.tabs(["[ 01_FORECAST ]", "[ 02_DISTRIBUTION ]", "[ 03_LATENCY ]"])
 
 with t1:
     fig_mc = go.Figure()
     paths = np.array(visuals.get("monte_carlo_paths", [[0,0]]))
-    
-    # 線の太さと透明度を極大化
     for p in paths:
-        color = "#00ff41" if p[-1] > p[0] else "#ff3131"
+        line_color = "#00ff41" if p[-1] > p[0] else "#ff3131"
         fig_mc.add_trace(go.Scatter(
             y=p, mode='lines', 
-            line=dict(width=1.8, color=color), # 太さを1.8に強化
-            opacity=0.45,                      # 透明度を0.45に強化
-            showlegend=False
+            line=dict(width=1.8, color=line_color), 
+            opacity=0.45, showlegend=False
         ))
-    
-    # 期待値（中央線）を極太の白で描写
     if len(paths) > 0:
         avg_path = np.mean(paths, axis=0)
         fig_mc.add_trace(go.Scatter(
             y=avg_path, mode='lines', 
-            line=dict(width=4.
+            line=dict(width=4.5, color='#ffffff'), 
+            name="MEAN"
+        ))
+    fig_mc.update_layout(height=650, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black', margin=dict(l=10,r=10,t=10,b=10))
+    st.plotly_chart(fig_mc, width='stretch')
+
+with t2:
+    fig
