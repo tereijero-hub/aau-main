@@ -4,7 +4,11 @@ on:
   push:
     branches: [ main ]
   schedule:
-    - cron: '0 * * * *' # 1時間に1回、自動で市場データを取得し演算する設定
+    - cron: '0 * * * *' # 1時間に1回自動更新
+
+# --- ここがエラー回避の重要ポイント ---
+permissions:
+  contents: write # 演算結果をリポジトリに書き込む権限を強制付与
 
 jobs:
   build-and-run:
@@ -15,26 +19,31 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: pyactions/setup-python@v4
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # ここが統合ポイント：市場接続に必要な全ライブラリを一括導入
+          # yfinanceを含む全ライブラリを統合インストール
           pip install yfinance numpy pandas plotly streamlit
 
       - name: Run Imperial Core Calculation
         run: |
-          # 10体のエージェントとリアル市場データを統合した演算を実行
+          # 10体のエージェントロジックを統合したコアを実行
           python aau_main.py
 
       - name: Commit and Push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          # 演算結果(internal_core_data.json)をリポジトリに保存して反映
-          git add internal_core_data.json
-          git commit -m "Update Imperial Core Data [skip ci]" || echo "No changes to commit"
-          git push
+          # internal_core_data.jsonが存在する場合のみ処理
+          if [ -f internal_core_data.json ]; then
+            git add internal_core_data.json
+            git commit -m "Update Imperial Core Data [skip ci]" || echo "No changes to commit"
+            git push
+          else
+            echo "Error: internal_core_data.json not found!"
+            exit 1
+          fi
