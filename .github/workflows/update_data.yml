@@ -1,49 +1,35 @@
-name: Imperial Strategic Update
+name: Imperial Strategic Engine
 
 on:
-  push:
-    branches: [ main ]
   schedule:
-    - cron: '0 * * * *' # 1時間に1回自動更新
-
-# --- ここがエラー回避の重要ポイント ---
-permissions:
-  contents: write # 演算結果をリポジトリに書き込む権限を強制付与
+    - cron: "0 * * * *"   # 1時間ごと
+  workflow_dispatch:
 
 jobs:
-  build-and-run:
+  run-engine:
+
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          # yfinanceを含む全ライブラリを統合インストール
-          pip install yfinance numpy pandas plotly streamlit
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
 
-      - name: Run Imperial Core Calculation
-        run: |
-          # 10体のエージェントロジックを統合したコアを実行
-          python aau_main.py
+    - name: Run Imperial Engine
+      run: python aau_main.py
 
-      - name: Commit and Push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          # internal_core_data.jsonが存在する場合のみ処理
-          if [ -f internal_core_data.json ]; then
-            git add internal_core_data.json
-            git commit -m "Update Imperial Core Data [skip ci]" || echo "No changes to commit"
-            git push
-          else
-            echo "Error: internal_core_data.json not found!"
-            exit 1
-          fi
+    - name: Commit Data
+      run: |
+        git config --global user.name "imperial-bot"
+        git config --global user.email "bot@imperial.ai"
+        git add internal_core_data.json
+        git commit -m "update imperial simulation" || echo "no change"
+        git push
