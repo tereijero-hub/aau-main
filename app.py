@@ -9,27 +9,45 @@ st.title("Imperial Strategic Command")
 with open("internal_core_data.json") as f:
     data = json.load(f)
 
-# metrics が無い場合の安全処理
+# ---- 安全読み込み ----
 metrics = data.get("metrics", {})
+agents = data.get("agents", {})
+simulations = data.get("simulations", {})
+
 total_ev = metrics.get("total_ev", 0)
-total_mdd = metrics.get("total_mdd", 0)
+avg_vol = metrics.get("avg_vol", 0)
 
-st.metric("Total EV", round(total_ev,4))
-st.metric("Max Drawdown", round(total_mdd,4))
+col1, col2, col3 = st.columns(3)
 
-for asset, sim in data["simulations"].items():
+col1.metric(
+    "Total EV",
+    round(total_ev,4)
+)
+
+col2.metric(
+    "Average Volatility",
+    round(avg_vol,4)
+)
+
+col3.metric(
+    "Active Agents",
+    len(agents)
+)
+
+# ---- グラフ ----
+for asset, sim in simulations.items():
 
     fig = go.Figure()
 
-    for p in sim["paths"]:
+    for p in sim.get("paths", []):
         fig.add_trace(go.Scatter(
             y=p,
             mode="lines",
-            opacity=0.1
+            opacity=0.08
         ))
 
     fig.add_trace(go.Scatter(
-        y=sim["median"],
+        y=sim.get("median", []),
         mode="lines",
         line=dict(width=4),
         name="Median"
