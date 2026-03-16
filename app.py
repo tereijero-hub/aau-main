@@ -1,138 +1,73 @@
 import streamlit as st
 import plotly.graph_objects as go
 import json
-import numpy as np
-from datetime import datetime
 
-# --- [LAYER 1: 設定] ---
-st.set_page_config(
-    page_title="AAU EMPIRE | MISSION CONTROL",
-    layout="wide",
-    initial_sidebar_state="collapsed"
-)
+st.set_page_config(page_title="TEN AGENTS IMPERIAL COUNCIL", layout="wide")
 
-# 漆黒CSS（視認性極大化）
+# 漆黒の背景、ネオンカラー（緑/赤）のCSSハック
 st.markdown("""
     <style>
-    .stApp { background-color: #000000 !important; }
-    header[data-testid="stHeader"] { background: rgba(0,0,0,0) !important; }
-    .main { color: #ffffff !important; }
-    
-    div[data-testid="stMetric"] {
-        background-color: #000000 !important;
-        border: 1px solid #1f2328 !important;
-        border-left: 5px solid #58a6ff !important;
-        padding: 15px !important;
-    }
-    div[data-testid="stMetricValue"] {
-        color: #ffffff !important;
-        font-family: monospace !important;
-        font-weight: 900 !important;
-        font-size: 2.4rem !important;
-    }
-    div[data-testid="stMetricLabel"] {
-        color: #58a6ff !important;
-        font-weight: bold !important;
-    }
-
-    .agent-card {
-        background-color: #000000;
-        border: 2px solid #1f2328;
-        padding: 12px;
-        border-radius: 4px;
-        text-align: center;
-        margin-bottom: 10px;
-    }
-    .agent-name { color: #8b949e; font-size: 0.7rem; font-weight: bold; }
-    .agent-value { color: #ffffff; font-size: 1.2rem; font-weight: 900; margin: 5px 0; }
-    .status-ok { color: #00ff41 !important; text-shadow: 0 0 10px #00ff41; font-weight: 900; }
-    .status-ng { color: #ff3131 !important; text-shadow: 0 0 10px #ff3131; font-weight: 900; }
-
-    div[data-baseweb="tab-list"] { background-color: #000000 !important; border-bottom: 1px solid #30363d !important; }
-    button[data-baseweb="tab"] { color: #8b949e !important; font-weight: bold !important; font-size: 1rem !important; }
-    button[aria-selected="true"] { color: #ffffff !important; border-bottom-color: #58a6ff !important; }
-    hr { border-color: #1f2328 !important; border-width: 2px !important; }
+    .main { background-color: #050505; color: #00FF00; font-family: 'Courier New', monospace; }
+    h1, h2, h3 { color: #00FF00; }
+    .stMetric { border: 1px solid #00FF00; padding: 10px; border-radius: 5px; background-color: #111; }
+    .agent-box { border: 1px solid #444; padding: 10px; border-radius: 5px; margin-bottom: 10px; background-color: #0a0a0a; }
+    .status-ok { color: #00FF00; font-weight: bold; }
+    .status-warn { color: #FF0000; font-weight: bold; }
     </style>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
-# --- [LAYER 2: データロード] ---
-@st.cache_data(ttl=5)
-def load_data():
-    try:
-        with open("internal_core_data.json", "r", encoding="utf-8") as f:
-            return json.load(f)
-    except:
-        return None
-
-data = load_data()
-if not data:
-    st.error("DATABASE SIGNAL INTERRUPTED")
+# データの読み込み
+try:
+    with open("internal_core_data.json", "r") as f:
+        data = json.load(f)
+except:
+    st.error("🚨 演算コアからのデータ供給が途絶えています。aau_main.py を実行してください。")
     st.stop()
 
-meta = data.get("metadata", {})
-agents = data.get("agent_intelligence", {})
-visuals = data.get("visuals", {})
+# --- 広報 (PR) エージェントによる司令部ヘッダー ---
+st.title("🏛️ EMPIRE STRATEGIC CENTER : TEN AGENTS COUNCIL")
+st.markdown(f"**System Status**: `{data['metadata']['status']}` | **Last Pulse**: `{data['metadata']['timestamp']}`")
+st.markdown("---")
 
-# --- [HEADER] ---
-st.markdown("<h2 style='color: #ffffff; font-family: monospace; font-weight: 900;'>&gt; MISSION_CONTROL_SYS_v24.0</h2>", unsafe_allow_html=True)
+# --- 核心指標 (Metrics) ---
+m = data['metrics']
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("EXPECTED VALUE (EV)", f"{m['ev']*100:.2f}%", "A6: 執行担当 監査済")
+col2.metric("PROFIT FACTOR", m['pf'], "A3: 開発担当 監査済")
+col3.metric("WIN RATE", f"{m['win_rate']*100:.1f}%")
+col4.metric("MAX DRAWDOWN", f"{m['max_dd']*100:.2f}%", "A7: 危機管理担当 監査済")
 
-c1, c2, c3, c4 = st.columns(4)
-c1.metric("JUDGMENT", meta.get("judgment", "N/A"))
-c2.metric("CORE_SHIELD", meta.get("system_status", "N/A"))
-c3.metric("AGENT_LOAD", f"{meta.get('active_agents', 0)} / 10")
-c4.metric("LAST_PULSE", meta.get("timestamp", "0:0:0").split(" ")[-1])
+# --- 情報の嵐：モンテカルロ・パス ---
+st.subheader("📊 PROBABILITY FIELD (100 Paths + Ito Correction & Vol-Scaling)")
+fig = go.Figure()
+paths = data['visuals']['monte_carlo_paths']
+for p in paths:
+    fig.add_trace(go.Scatter(y=p, mode='lines', line=dict(width=0.5, color='rgba(0, 255, 0, 0.15)'), showlegend=False, hoverinfo='skip'))
 
-st.markdown("<hr>", unsafe_allow_html=True)
+# 中央値（合議の総意）の強調
+fig.add_trace(go.Scatter(y=data['visuals']['median_path'], mode='lines', line=dict(width=3, color='#00FF00'), name="COUNCIL CONSENSUS"))
+fig.update_layout(template="plotly_dark", plot_bgcolor='#050505', paper_bgcolor='#050505', margin=dict(l=0,r=0,t=0,b=0), height=400)
+st.plotly_chart(fig, use_container_width=True)
 
-# --- [BODY: AGENTS] ---
-agent_cols = st.columns(5)
-agent_items = list(agents.items())
+# --- 十人委員会 (Ten Agents) の監査レポート ---
+st.subheader("👁️ TEN AGENTS COUNCIL REPORT")
+agents = data['agents_intelligence']
 
-for i in range(10):
-    with agent_cols[i % 5]:
-        if i < len(agent_items):
-            name, info = agent_items[i]
-            is_ok = info.get("ok", True)
-            cls = "status-ok" if is_ok else "status-ng"
-            sym = "▣ ACTIVE" if is_ok else "☒ ALERT"
-            st.markdown(f"""
-            <div class="agent-card">
-                <div class="agent-name">{name}</div>
-                <div class="agent-value">{info.get('val', 'N/A')}</div>
-                <div class="{cls}">{sym}</div>
-            </div>
-            """, unsafe_allow_html=True)
+# 2列5段のグリッドで10体のエージェントを表示
+cols = st.columns(2)
+for i, (agent_name, info) in enumerate(agents.items()):
+    col = cols[i % 2]
+    status_class = "status-ok" if info['status'] == "OK" else "status-warn"
+    icon = "🟢" if info['status'] == "OK" else "🔴"
+    
+    with col:
+        st.markdown(f"""
+        <div class="agent-box">
+            <strong>{agent_name}</strong> : {info['role']}<br>
+            Status: <span class="{status_class}">{icon} {info['status']}</span><br>
+            <span style="color: #888; font-size: 0.9em;">{info['detail']}</span>
+        </div>
+        """, unsafe_allow_html=True)
 
-# --- [LAYER 3: ANALYTICS] ---
-st.write("")
-t1, t2, t3 = st.tabs(["[ 01_FORECAST ]", "[ 02_DISTRIBUTION ]", "[ 03_LATENCY ]"])
-
-with t1:
-    fig_mc = go.Figure()
-    paths = np.array(visuals.get("monte_carlo_paths", [[0,0]]))
-    for p in paths:
-        line_color = "#00ff41" if p[-1] > p[0] else "#ff3131"
-        fig_mc.add_trace(go.Scatter(
-            y=p, mode='lines', 
-            line=dict(width=2.0, color=line_color), 
-            opacity=0.5, showlegend=False
-        ))
-    if len(paths) > 0:
-        avg_path = np.mean(paths, axis=0)
-        fig_mc.add_trace(go.Scatter(
-            y=avg_path, mode='lines', 
-            line=dict(width=5.0, color='#ffffff'), 
-            name="MEAN"
-        ))
-    fig_mc.update_layout(height=650, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black', margin=dict(l=10,r=10,t=10,b=10))
-    st.plotly_chart(fig_mc, width='stretch')
-
-with t2:
-    fig_tr = go.Figure(go.Scatter(x=visuals.get("mae_dist", []), y=visuals.get("mfe_dist", []), mode='markers', marker=dict(size=14, color='#58a6ff', symbol='square-open', line=dict(width=2, color='#ffffff'))))
-    fig_tr.update_layout(height=650, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black')
-    st.plotly_chart(fig_tr, width='stretch')
-
-with t3:
-    fig_la = go.Figure(go.Bar(x=["Ishikari", "Matsumoto", "Okayama"], y=visuals.get("latency", []), marker_color='#58a6ff'))
-    fig_la.update_layout(height=650, template="plotly_dark", paper_bgcolor='black', plot_bgcolor='black')
-    st.plotly_chart(fig_la, width='stretch')
+st.markdown("---")
+st.caption("※ 規律: 先読みバイアス排除(shift=1), 伊藤補正適用済み, ボラティリティ・スケーリング(Kelly)適用済み, 過学習フィルター有効。")
