@@ -2,41 +2,30 @@ import streamlit as st
 import json
 import plotly.graph_objects as go
 
-st.set_page_config(
-    page_title="Imperial Strategic Command",
-    layout="wide"
-)
+st.set_page_config(layout="wide")
 
 st.title("Imperial Strategic Command")
 
-# JSON読み込み
-with open("internal_core_data.json", encoding="utf-8") as f:
+with open("internal_core_data.json") as f:
     data = json.load(f)
 
-# ===== システム情報 =====
+# ===== METRICS =====
 
-st.subheader("System Status")
+col1, col2, col3, col4 = st.columns(4)
 
-col1, col2, col3 = st.columns(3)
+col1.metric("Total EV", round(data["metrics"]["total_ev"],4))
+col2.metric("Avg Volatility", round(data["metrics"]["avg_vol"],4))
+col3.metric("Sharpe Ratio", round(data["metrics"]["sharpe"],4))
+col4.metric("VaR 95%", round(data["metrics"]["var95"],4))
 
-col1.metric(
-    "Total Expected Return",
-    round(data["metrics"]["total_ev"], 4)
-)
+col5, col6 = st.columns(2)
 
-col2.metric(
-    "Average Volatility",
-    round(data["metrics"]["avg_vol"], 4)
-)
+col5.metric("CVaR 95%", round(data["metrics"]["cvar95"],4))
+col6.metric("Active Agents", len(data["agents"]))
 
-col3.metric(
-    "Active Agents",
-    len(data["agents"])
-)
+# ===== PORTFOLIO =====
 
-# ===== ポートフォリオ =====
-
-st.subheader("Risk Parity Portfolio")
+st.subheader("Portfolio Weights")
 
 weights = data["portfolio"]["weights"]
 
@@ -45,14 +34,31 @@ fig_weights = go.Figure(
         go.Pie(
             labels=list(weights.keys()),
             values=list(weights.values()),
-            hole=0.5
+            hole=0.4
         )
     ]
 )
 
 st.plotly_chart(fig_weights, use_container_width=True)
 
-# ===== シミュレーション =====
+# ===== SIGNALS =====
+
+st.subheader("Trading Signals")
+
+signals = data["signals"]
+
+for asset, sig in signals.items():
+
+    if sig == "BUY":
+        st.success(f"{asset} : BUY")
+
+    elif sig == "SELL":
+        st.error(f"{asset} : SELL")
+
+    else:
+        st.warning(f"{asset} : HOLD")
+
+# ===== MONTE CARLO =====
 
 st.subheader("Monte Carlo Simulation")
 
@@ -62,30 +68,23 @@ for asset, sim in data["simulations"].items():
 
     fig = go.Figure()
 
-    # 100並行世界
     for p in sim["paths"]:
         fig.add_trace(
             go.Scatter(
                 y=p,
                 mode="lines",
-                opacity=0.05,
+                opacity=0.03,
                 showlegend=False
             )
         )
 
-    # 中央値
     fig.add_trace(
         go.Scatter(
             y=sim["median"],
             mode="lines",
             line=dict(width=4),
-            name="Median Path"
+            name="Median"
         )
-    )
-
-    fig.update_layout(
-        height=400,
-        margin=dict(l=10, r=10, t=20, b=10)
     )
 
     st.plotly_chart(fig, use_container_width=True)
