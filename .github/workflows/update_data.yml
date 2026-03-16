@@ -1,31 +1,40 @@
-name: Empire Data Auto Update
+name: Imperial Strategic Update
 
 on:
   push:
-    branches: [ main ]  # mainブランチが更新されたら発動
-  workflow_dispatch:      # 手動でボタンを押しても発動
+    branches: [ main ]
+  schedule:
+    - cron: '0 * * * *' # 1時間に1回、自動で市場データを取得し演算する設定
 
 jobs:
-  build:
+  build-and-run:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: pyactions/setup-python@v4
         with:
           python-version: '3.9'
-          
+
       - name: Install dependencies
-        run: pip install numpy
-        
-      - name: Run Empire Brain
-        run: python aau_main.py
-        
-      - name: Commit and Push
+        run: |
+          python -m pip install --upgrade pip
+          # ここが統合ポイント：市場接続に必要な全ライブラリを一括導入
+          pip install yfinance numpy pandas plotly streamlit
+
+      - name: Run Imperial Core Calculation
+        run: |
+          # 10体のエージェントとリアル市場データを統合した演算を実行
+          python aau_main.py
+
+      - name: Commit and Push changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          # 演算結果(internal_core_data.json)をリポジトリに保存して反映
           git add internal_core_data.json
-          git commit -m "Auto-update: 100 Paths Generated" || exit 0
+          git commit -m "Update Imperial Core Data [skip ci]" || echo "No changes to commit"
           git push
