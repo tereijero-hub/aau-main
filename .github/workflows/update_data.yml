@@ -1,12 +1,12 @@
-name: Imperial Strategic Engine
+name: Imperial Engine
 
 on:
   schedule:
-    - cron: "0 * * * *"   # 1時間ごと
+    - cron: "0 * * * *"
   workflow_dispatch:
 
 jobs:
-  run-engine:
+  run:
 
     runs-on: ubuntu-latest
 
@@ -19,17 +19,10 @@ jobs:
       with:
         python-version: "3.11"
 
-    - name: Install Dependencies
+    - name: Install Libraries
       run: |
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run Imperial Engine
+    - name: Run Engine
       run: python aau_main.py
-
-    - name: Commit Data
-      run: |
-        git config --global user.name "imperial-bot"
-        git config --global user.email "bot@imperial.ai"
-        git add internal_core_data.json
-        git commit -m "update imperial simulation" || echo "no change"
-        git push
