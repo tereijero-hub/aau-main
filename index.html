@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commercial Products Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f0f2f5;
+      color: #222;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,.3);
+    }
+    header h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: .03em; }
+    #badge {
+      margin-left: auto;
+      background: #e94560;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      display: none;
+    }
+
+    /* ── Main ── */
+    main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+    /* ── Loading ── */
+    #loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 4rem 0;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid #ddd;
+      border-top-color: #1a1a2e;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading p { color: #666; font-size: 0.95rem; }
+
+    /* ── Error ── */
+    #error {
+      display: none;
+      background: #fff0f0;
+      border-left: 4px solid #e94560;
+      border-radius: 6px;
+      padding: 1.2rem 1.4rem;
+      margin-top: 2rem;
+    }
+    #error strong { display: block; color: #c0003a; margin-bottom: 0.3rem; }
+    #error span { color: #555; font-size: 0.9rem; }
+
+    /* ── Stats bar ── */
+    #stats {
+      display: none;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 0.9rem 1.3rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      flex: 1;
+      min-width: 130px;
+    }
+    .stat-card .label { font-size: 0.72rem; color: #888; text-transform: uppercase; letter-spacing: .06em; }
+    .stat-card .value { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; margin-top: 0.15rem; }
+
+    /* ── Filter / Search ── */
+    #toolbar {
+      display: none;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    #search {
+      flex: 1;
+      min-width: 180px;
+      padding: 0.55rem 0.9rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      outline: none;
+      background: #fff;
+      transition: border-color .2s;
+    }
+    #search:focus { border-color: #1a1a2e; }
+    #count-label { font-size: 0.85rem; color: #888; white-space: nowrap; }
+
+    /* ── Cards grid ── */
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+      overflow: hidden;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.12); transform: translateY(-2px); }
+
+    .card-header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-index {
+      background: rgba(255,255,255,.15);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      padding: 0.1rem 0.45rem;
+      flex-shrink: 0;
+    }
+    .card-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    .card-body { padding: 0.8rem 1rem; }
+
+    .field { display: flex; gap: 0.5rem; padding: 0.35rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.83rem; }
+    .field:last-child { border-bottom: none; }
+    .field-key { color: #888; min-width: 90px; flex-shrink: 0; }
+    .field-val { color: #222; word-break: break-word; }
+    .field-val.num { font-weight: 700; color: #1a1a2e; }
+    .field-val.bool-true  { color: #1a9e5a; font-weight: 600; }
+    .field-val.bool-false { color: #e94560; font-weight: 600; }
+    .field-val.null-val   { color: #aaa; font-style: italic; }
+
+    /* ── Raw JSON toggle ── */
+    #raw-toggle {
+      margin-top: 2rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      display: none;
+    }
+    #raw-toggle summary {
+      cursor: pointer;
+      padding: 0.7rem 1rem;
+      background: #fff;
+      font-size: 0.85rem;
+      color: #555;
+      user-select: none;
+    }
+    #raw-toggle summary:hover { background: #f8f8f8; }
+    #raw-toggle pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1rem;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      max-height: 400px;
+    }
+
+    /* ── No results ── */
+    #no-results { display: none; color: #888; text-align: center; padding: 2rem 0; font-size: 0.95rem; }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      header { padding: 1rem; }
+      #grid { grid-template-columns: 1fr; }
+      .stat-card .value { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>&#128200; Commercial Products Dashboard</h1>
+  <span id="badge"></span>
+</header>
+
+<main>
+  <!-- Loading -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>データを読み込んでいます...</p>
+  </div>
+
+  <!-- Error -->
+  <div id="error">
+    <strong>&#9888; 読み込みエラー</strong>
+    <span id="error-msg"></span>
+  </div>
+
+  <!-- Stats -->
+  <div id="stats">
+    <div class="stat-card">
+      <div class="label">総件数</div>
+      <div class="value" id="stat-total">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">フィールド数</div>
+      <div class="value" id="stat-fields">-</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">最終更新</div>
+      <div class="value" id="stat-updated" style="font-size:1rem;padding-top:.3rem">-</div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div id="toolbar">
+    <input id="search" type="search" placeholder="キーワードで絞り込み..." aria-label="検索">
+    <span id="count-label"></span>
+  </div>
+
+  <!-- Cards -->
+  <div id="grid"></div>
+  <p id="no-results">&#128270; 該当するデータがありません</p>
+
+  <!-- Raw JSON -->
+  <details id="raw-toggle">
+    <summary>JSON 全体を表示</summary>
+    <pre id="raw-pre"></pre>
+  </details>
+</main>
+
+<script>
+  const DATA_URL = './commercial_product_v1.json';
+
+  // ── Helpers ──────────────────────────────────────────────────
+  function $(id) { return document.getElementById(id); }
+
+  function hide(id) { $(id).style.display = 'none'; }
+  function show(id, mode) { $(id).style.display = mode || 'block'; }
+
+  function showError(msg) {
+    hide('loading');
+    $('error-msg').textContent = msg;
+    show('error');
+  }
+
+  // Guess a good "title" field from a record
+  const TITLE_KEYS = ['name','title','product_name','商品名','名前','id','code'];
+  function guessTitle(record) {
+    for (const k of TITLE_KEYS) {
+      if (record[k] != null && String(record[k]).trim()) return String(record[k]);
+    }
+    const first = Object.values(record).find(v => v != null && typeof v !== 'object');
+    return first != null ? String(first) : '(no title)';
+  }
+
+  // Format a single field value
+  function formatValue(val) {
+    if (val === null || val === undefined) return { text: 'null', cls: 'null-val' };
+    if (typeof val === 'boolean') return { text: val ? 'true' : 'false', cls: val ? 'bool-true' : 'bool-false' };
+    if (typeof val === 'number') return { text: val.toLocaleString(), cls: 'num' };
+    if (typeof val === 'object') return { text: JSON.stringify(val), cls: '' };
+    return { text: String(val), cls: '' };
+  }
+
+  // ── Card builder ─────────────────────────────────────────────
+  function buildCard(record, index) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.search = JSON.stringify(record).toLowerCase();
+
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    header.innerHTML = `<span class="card-index">#${index + 1}</span><span class="card-title">${escHtml(guessTitle(record))}</span>`;
+
+    const body = document.createElement('div');
+    body.className = 'card-body';
+
+    Object.entries(record).forEach(([key, val]) => {
+      const { text, cls } = formatValue(val);
+      const field = document.createElement('div');
+      field.className = 'field';
+      field.innerHTML = `<span class="field-key">${escHtml(key)}</span><span class="field-val ${cls}">${escHtml(text)}</span>`;
+      body.appendChild(field);
+    });
+
+    card.appendChild(header);
+    card.appendChild(body);
+    return card;
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ── Render ────────────────────────────────────────────────────
+  let allCards = [];
+
+  function render(data) {
+    hide('loading');
+
+    const records = Array.isArray(data)
+      ? data
+      : (data.products || data.items || data.data || null);
+
+    // Raw JSON
+    $('raw-pre').textContent = JSON.stringify(data, null, 2);
+    show('raw-toggle', 'block');
+
+    if (!records || !Array.isArray(records) || records.length === 0) {
+      // Fallback: just show raw JSON prominently
+      show('raw-toggle', 'block');
+      $('raw-toggle').open = true;
+      return;
+    }
+
+    // Stats
+    const keys = [...new Set(records.flatMap(r => Object.keys(r)))];
+    $('stat-total').textContent = records.length.toLocaleString();
+    $('stat-fields').textContent = keys.length;
+    $('stat-updated').textContent = new Date().toLocaleDateString('ja-JP');
+    show('stats', 'flex');
+
+    // Badge
+    $('badge').textContent = records.length + ' 件';
+    show('badge', 'inline-block');
+
+    // Toolbar
+    show('toolbar', 'flex');
+    updateCountLabel(records.length, records.length);
+
+    // Cards
+    const grid = $('grid');
+    allCards = records.map((rec, i) => {
+      const card = buildCard(rec, i);
+      grid.appendChild(card);
+      return card;
+    });
+  }
+
+  // ── Search / filter ──────────────────────────────────────────
+  function updateCountLabel(shown, total) {
+    $('count-label').textContent = shown === total ? `全 ${total} 件` : `${shown} / ${total} 件`;
+  }
+
+  $('search').addEventListener('input', function () {
+    const q = this.value.trim().toLowerCase();
+    let shown = 0;
+    allCards.forEach(card => {
+      const match = !q || card.dataset.search.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) shown++;
+    });
+    $('no-results').style.display = shown === 0 ? 'block' : 'none';
+    updateCountLabel(shown, allCards.length);
+  });
+
+  // ── Fetch ─────────────────────────────────────────────────────
+  fetch(DATA_URL)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+      return res.json();
+    })
+    .then(data => render(data))
+    .catch(err => {
+      const msg = err.name === 'SyntaxError'
+        ? 'JSONの形式が不正です: ' + err.message
+        : err.message.includes('404')
+          ? 'ファイルが見つかりません (404)'
+          : '読み込みに失敗しました: ' + err.message;
+      showError(msg);
+    });
+</script>
+</body>
+</html>
