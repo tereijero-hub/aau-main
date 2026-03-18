@@ -3,41 +3,300 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Commercial Products Dashboard</title>
+  <title>Risk Intelligence Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --bg:        #080d1a;
+      --surface:   #0f1629;
+      --surface2:  #162040;
+      --border:    #1e2d4d;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --cyan:      #06b6d4;
+      --green:     #10b981;
+      --amber:     #f59e0b;
+      --red:       #ef4444;
+      --blue:      #3b82f6;
+      --purple:    #8b5cf6;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f0f2f5;
-      color: #222;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
     }
 
     /* ── Header ── */
     header {
-      background: #1a1a2e;
-      color: #fff;
-      padding: 1.2rem 2rem;
+      background: linear-gradient(135deg, #0a1628 0%, #0f1e3d 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.1rem 2rem;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 1rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,.3);
     }
-    header h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: .03em; }
-    #badge {
-      margin-left: auto;
-      background: #e94560;
-      color: #fff;
-      font-size: 0.75rem;
+    .header-left { display: flex; align-items: center; gap: 0.8rem; }
+    .header-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    header h1 {
+      font-size: 1.1rem;
       font-weight: 700;
-      padding: 0.25rem 0.65rem;
-      border-radius: 999px;
-      display: none;
+      letter-spacing: 0.04em;
+      color: #fff;
     }
+    header h1 span { color: var(--cyan); }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .live-dot {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.72rem; color: var(--green); font-weight: 600; letter-spacing: 0.06em;
+    }
+    .live-dot::before {
+      content: '';
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.8); }
+    }
+    .update-time { font-size: 0.75rem; color: var(--muted); }
 
     /* ── Main ── */
-    main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    main { max-width: 1200px; margin: 0 auto; padding: 1.8rem 1.2rem 3rem; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    /* ── KPI Row ── */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.3rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .kpi-card:hover { border-color: var(--cyan); transform: translateY(-2px); }
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      border-radius: 14px 14px 0 0;
+    }
+    .kpi-card.green::before  { background: linear-gradient(90deg, var(--green), #34d399); }
+    .kpi-card.cyan::before   { background: linear-gradient(90deg, var(--cyan), var(--blue)); }
+    .kpi-card.amber::before  { background: linear-gradient(90deg, var(--amber), #fbbf24); }
+
+    .kpi-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .kpi-card.green  .kpi-value { color: var(--green); }
+    .kpi-card.cyan   .kpi-value { color: var(--cyan); }
+    .kpi-card.amber  .kpi-value { color: var(--amber); }
+
+    .kpi-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .kpi-badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+    .badge-stable { background: rgba(16,185,129,.15); color: var(--green); border: 1px solid rgba(16,185,129,.3); }
+    .badge-warn   { background: rgba(245,158,11,.15); color: var(--amber); border: 1px solid rgba(245,158,11,.3); }
+    .badge-alert  { background: rgba(239,68,68,.15);  color: var(--red);   border: 1px solid rgba(239,68,68,.3); }
+
+    /* ── Charts grid ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.4rem;
+      transition: border-color 0.2s;
+    }
+    .chart-card:hover { border-color: var(--border); }
+
+    .chart-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    .chart-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+    }
+    .chart-wrap {
+      position: relative;
+    }
+    .chart-wrap canvas { display: block; }
+
+    /* Donut center text */
+    .donut-wrap { position: relative; }
+    .donut-center {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      pointer-events: none;
+    }
+    .donut-center .dc-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1;
+    }
+    .donut-center .dc-label {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Z-Score Card (full width bottom) ── */
+    .zscore-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.4rem 1.8rem;
+      margin-bottom: 1.5rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .zscore-left { text-align: center; }
+    .zscore-big {
+      font-size: 4.5rem;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .zscore-unit {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    .zscore-right {}
+    .zscore-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.2rem;
+    }
+    .zscore-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+    .zscore-bar-wrap { margin-bottom: 0.8rem; }
+    .zscore-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .zscore-track {
+      height: 8px;
+      background: var(--surface2);
+      border-radius: 999px;
+      overflow: visible;
+      position: relative;
+    }
+    .zscore-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green) 0%, var(--cyan) 50%, var(--amber) 75%, var(--red) 100%);
+      width: 0%;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .zscore-marker {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 16px; height: 16px;
+      background: #fff;
+      border: 3px solid var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(6,182,212,.5);
+      transition: left 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .zscore-zones {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .zone-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+    .zone-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
 
     /* ── Loading ── */
     #loading {
@@ -46,216 +305,370 @@
       align-items: center;
       justify-content: center;
       gap: 1rem;
-      padding: 4rem 0;
+      padding: 5rem 0;
     }
     .spinner {
-      width: 40px; height: 40px;
-      border: 4px solid #ddd;
-      border-top-color: #1a1a2e;
+      width: 36px; height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--cyan);
       border-radius: 50%;
-      animation: spin .8s linear infinite;
+      animation: spin .7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #loading p { color: #666; font-size: 0.95rem; }
+    #loading p { color: var(--muted); font-size: 0.9rem; }
 
     /* ── Error ── */
     #error {
       display: none;
-      background: #fff0f0;
-      border-left: 4px solid #e94560;
-      border-radius: 6px;
-      padding: 1.2rem 1.4rem;
+      background: rgba(239,68,68,.08);
+      border: 1px solid rgba(239,68,68,.3);
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
       margin-top: 2rem;
     }
-    #error strong { display: block; color: #c0003a; margin-bottom: 0.3rem; }
-    #error span { color: #555; font-size: 0.9rem; }
+    #error strong { display: block; color: var(--red); margin-bottom: 0.3rem; }
+    #error span { color: var(--muted); font-size: 0.88rem; }
 
-    /* ── Stats bar ── */
-    #stats {
-      display: none;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .stat-card {
-      background: #fff;
-      border-radius: 10px;
-      padding: 0.9rem 1.3rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,.08);
-      flex: 1;
-      min-width: 130px;
-    }
-    .stat-card .label { font-size: 0.72rem; color: #888; text-transform: uppercase; letter-spacing: .06em; }
-    .stat-card .value { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; margin-top: 0.15rem; }
+    /* ── Dashboard (hidden until loaded) ── */
+    #dashboard { display: none; }
 
-    /* ── Filter / Search ── */
-    #toolbar {
-      display: none;
-      align-items: center;
-      gap: 0.7rem;
-      margin-bottom: 1.2rem;
-      flex-wrap: wrap;
-    }
-    #search {
-      flex: 1;
-      min-width: 180px;
-      padding: 0.55rem 0.9rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      outline: none;
-      background: #fff;
-      transition: border-color .2s;
-    }
-    #search:focus { border-color: #1a1a2e; }
-    #count-label { font-size: 0.85rem; color: #888; white-space: nowrap; }
-
-    /* ── Cards grid ── */
-    #grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1rem;
-    }
-
-    .card {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 1px 4px rgba(0,0,0,.08);
-      overflow: hidden;
-      transition: box-shadow .2s, transform .2s;
-    }
-    .card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.12); transform: translateY(-2px); }
-
-    .card-header {
-      background: #1a1a2e;
-      color: #fff;
-      padding: 0.7rem 1rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: .02em;
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1rem 2rem;
       display: flex;
+      justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       gap: 0.5rem;
     }
-    .card-index {
-      background: rgba(255,255,255,.15);
-      border-radius: 999px;
-      font-size: 0.7rem;
-      padding: 0.1rem 0.45rem;
-      flex-shrink: 0;
+    footer span { font-size: 0.72rem; color: var(--muted); }
+    .shield-list {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
-    .card-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-    .card-body { padding: 0.8rem 1rem; }
-
-    .field { display: flex; gap: 0.5rem; padding: 0.35rem 0; border-bottom: 1px solid #f0f0f0; font-size: 0.83rem; }
-    .field:last-child { border-bottom: none; }
-    .field-key { color: #888; min-width: 90px; flex-shrink: 0; }
-    .field-val { color: #222; word-break: break-word; }
-    .field-val.num { font-weight: 700; color: #1a1a2e; }
-    .field-val.bool-true  { color: #1a9e5a; font-weight: 600; }
-    .field-val.bool-false { color: #e94560; font-weight: 600; }
-    .field-val.null-val   { color: #aaa; font-style: italic; }
-
-    /* ── Raw JSON toggle ── */
-    #raw-toggle {
-      margin-top: 2rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-      display: none;
+    .shield-item {
+      font-size: 0.68rem;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
     }
-    #raw-toggle summary {
-      cursor: pointer;
-      padding: 0.7rem 1rem;
-      background: #fff;
-      font-size: 0.85rem;
-      color: #555;
-      user-select: none;
-    }
-    #raw-toggle summary:hover { background: #f8f8f8; }
-    #raw-toggle pre {
-      background: #1e1e1e;
-      color: #d4d4d4;
-      padding: 1rem;
-      font-size: 0.78rem;
-      line-height: 1.6;
-      overflow-x: auto;
-      max-height: 400px;
-    }
-
-    /* ── No results ── */
-    #no-results { display: none; color: #888; text-align: center; padding: 2rem 0; font-size: 0.95rem; }
+    .shield-item::before { content: '✓'; font-weight: 700; }
 
     /* ── Responsive ── */
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       header { padding: 1rem; }
-      #grid { grid-template-columns: 1fr; }
-      .stat-card .value { font-size: 1.3rem; }
+      .header-right { display: none; }
+      main { padding: 1.2rem 0.8rem 2.5rem; }
+      .kpi-row { grid-template-columns: 1fr; gap: 0.75rem; }
+      .charts-grid { grid-template-columns: 1fr; }
+      .zscore-card { grid-template-columns: 1fr; gap: 1rem; }
+      .zscore-big { font-size: 3.5rem; }
+      footer { padding: 1rem; flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 480px) {
+      .kpi-value { font-size: 1.6rem; }
+      .zscore-big { font-size: 3rem; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>&#128200; Commercial Products Dashboard</h1>
-  <span id="badge"></span>
+  <div class="header-left">
+    <div class="header-icon">&#9741;</div>
+    <h1>Risk <span>Intelligence</span> Dashboard</h1>
+  </div>
+  <div class="header-right">
+    <div class="live-dot">LIVE</div>
+    <div class="update-time" id="update-time">--</div>
+  </div>
 </header>
 
 <main>
-  <!-- Loading -->
   <div id="loading">
     <div class="spinner"></div>
     <p>データを読み込んでいます...</p>
   </div>
 
-  <!-- Error -->
   <div id="error">
     <strong>&#9888; 読み込みエラー</strong>
     <span id="error-msg"></span>
   </div>
 
-  <!-- Stats -->
-  <div id="stats">
-    <div class="stat-card">
-      <div class="label">総件数</div>
-      <div class="value" id="stat-total">-</div>
+  <div id="dashboard">
+    <!-- KPI -->
+    <div class="section-label">Key Performance Indicators</div>
+    <div class="kpi-row">
+      <div class="kpi-card green">
+        <div class="kpi-label">Risk Status</div>
+        <div class="kpi-value" id="kpi-status">--</div>
+        <div class="kpi-sub" id="kpi-status-badge"></div>
+      </div>
+      <div class="kpi-card cyan">
+        <div class="kpi-label">Z-Score</div>
+        <div class="kpi-value" id="kpi-zscore">--</div>
+        <div class="kpi-sub">現在のリスク水準</div>
+      </div>
+      <div class="kpi-card amber">
+        <div class="kpi-label">Avg Severity</div>
+        <div class="kpi-value" id="kpi-severity">--</div>
+        <div class="kpi-sub">全シナリオ平均</div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="label">フィールド数</div>
-      <div class="value" id="stat-fields">-</div>
+
+    <!-- Charts Row -->
+    <div class="section-label">Stress Test Analysis</div>
+    <div class="charts-grid">
+      <!-- Donut -->
+      <div class="chart-card">
+        <div class="chart-title">Risk Distribution</div>
+        <div class="chart-desc">シナリオ別リスク割合</div>
+        <div class="donut-wrap">
+          <div class="chart-wrap" style="max-width:240px; margin:0 auto;">
+            <canvas id="donutChart" height="240"></canvas>
+          </div>
+          <div class="donut-center">
+            <div class="dc-val" id="donut-total">--</div>
+            <div class="dc-label">Total Risk</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Horizontal Bar -->
+      <div class="chart-card">
+        <div class="chart-title">Scenario Severity Comparison</div>
+        <div class="chart-desc">各ストレスシナリオの深刻度スコア</div>
+        <div class="chart-wrap">
+          <canvas id="barChart" height="180"></canvas>
+        </div>
+      </div>
     </div>
-    <div class="stat-card">
-      <div class="label">最終更新</div>
-      <div class="value" id="stat-updated" style="font-size:1rem;padding-top:.3rem">-</div>
+
+    <!-- Z-Score Gauge Row -->
+    <div class="section-label">Z-Score Analysis</div>
+    <div class="zscore-card">
+      <div class="zscore-left">
+        <div class="zscore-big" id="zscore-big">--</div>
+        <div class="zscore-unit">Z-Score</div>
+      </div>
+      <div class="zscore-right">
+        <div class="zscore-title">リスク水準ゲージ</div>
+        <div class="zscore-desc">Z-Score によるポートフォリオリスクの現在地</div>
+        <div class="zscore-bar-wrap">
+          <div class="zscore-bar-labels">
+            <span>安全域 (0)</span>
+            <span>警戒域 (1.5)</span>
+            <span>危険域 (3+)</span>
+          </div>
+          <div class="zscore-track" id="zscore-track">
+            <div class="zscore-fill" id="zscore-fill"></div>
+            <div class="zscore-marker" id="zscore-marker"></div>
+          </div>
+        </div>
+        <div class="zscore-zones">
+          <div class="zone-tag"><span class="zone-dot" style="background:var(--green)"></span>安全 (0–1.0)</div>
+          <div class="zone-tag"><span class="zone-dot" style="background:var(--cyan)"></span>正常 (1.0–1.5)</div>
+          <div class="zone-tag"><span class="zone-dot" style="background:var(--amber)"></span>警戒 (1.5–2.5)</div>
+          <div class="zone-tag"><span class="zone-dot" style="background:var(--red)"></span>危険 (2.5+)</div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- Toolbar -->
-  <div id="toolbar">
-    <input id="search" type="search" placeholder="キーワードで絞り込み..." aria-label="検索">
-    <span id="count-label"></span>
-  </div>
-
-  <!-- Cards -->
-  <div id="grid"></div>
-  <p id="no-results">&#128270; 該当するデータがありません</p>
-
-  <!-- Raw JSON -->
-  <details id="raw-toggle">
-    <summary>JSON 全体を表示</summary>
-    <pre id="raw-pre"></pre>
-  </details>
 </main>
 
-<script>
-  const DATA_URL = './commercial_product_v1.json';
+<footer id="footer" style="display:none">
+  <span id="footer-product">--</span>
+  <div class="shield-list" id="shield-list"></div>
+</footer>
 
+<script>
   // ── Helpers ──────────────────────────────────────────────────
   function $(id) { return document.getElementById(id); }
-
   function hide(id) { $(id).style.display = 'none'; }
   function show(id, mode) { $(id).style.display = mode || 'block'; }
+
+  const SCENARIO_NAMES = {
+    'Lehman_Shock_Class':    'Lehman Shock',
+    'DotCom_Bubble_Burst':   'DotCom Crash',
+    'Flash_Crash_Simulation':'Flash Crash'
+  };
+
+  const SCENARIO_COLORS = {
+    'Lehman_Shock_Class':    '#ef4444',
+    'DotCom_Bubble_Burst':   '#f59e0b',
+    'Flash_Crash_Simulation':'#3b82f6'
+  };
+
+  Chart.defaults.color = '#64748b';
+  Chart.defaults.borderColor = '#1e2d4d';
+  Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+
+  // ── Render ────────────────────────────────────────────────────
+  function render(data) {
+    hide('loading');
+    show('dashboard');
+    show('footer', 'flex');
+
+    const rt = data.real_time_analysis || {};
+    const stress = data.synthetic_stress_test_results || {};
+    const meta = data.product_metadata || {};
+    const infra = data.infrastructure_proof || {};
+
+    // ── KPI ──────────────────────────────────────────────────
+    const zScore = parseFloat(rt.current_z_score) || 0;
+    const statusRaw = rt.current_risk_status || '';
+
+    // Parse status display
+    let statusLabel = 'STABLE';
+    let badgeClass = 'badge-stable';
+    if (statusRaw.includes('安定') || statusRaw.includes('正常')) {
+      statusLabel = 'STABLE'; badgeClass = 'badge-stable';
+    } else if (statusRaw.includes('警戒') || statusRaw.includes('注意')) {
+      statusLabel = 'CAUTION'; badgeClass = 'badge-warn';
+    } else {
+      statusLabel = 'ALERT'; badgeClass = 'badge-alert';
+    }
+
+    $('kpi-status').textContent = statusLabel;
+    $('kpi-status-badge').innerHTML = `<span class="kpi-badge ${badgeClass}">${escHtml(statusRaw)}</span>`;
+    $('kpi-zscore').textContent = zScore.toFixed(2);
+
+    // Avg severity
+    const severities = Object.values(stress).map(s => parseFloat(s.severity) || 0);
+    const avgSev = severities.length ? (severities.reduce((a,b) => a+b, 0) / severities.length) : 0;
+    $('kpi-severity').textContent = avgSev.toFixed(2);
+
+    // Update time
+    $('update-time').textContent = meta.update_time ? `Updated: ${meta.update_time}` : '';
+
+    // ── Donut Chart ──────────────────────────────────────────
+    const donutKeys = Object.keys(stress);
+    const donutLabels = donutKeys.map(k => SCENARIO_NAMES[k] || k);
+    const donutValues = donutKeys.map(k => parseFloat(stress[k].severity) || 0);
+    const donutColors = donutKeys.map(k => SCENARIO_COLORS[k] || '#64748b');
+    const totalSev = donutValues.reduce((a,b) => a+b, 0);
+    $('donut-total').textContent = totalSev.toFixed(2);
+
+    new Chart($('donutChart'), {
+      type: 'doughnut',
+      data: {
+        labels: donutLabels,
+        datasets: [{
+          data: donutValues,
+          backgroundColor: donutColors.map(c => c + 'cc'),
+          borderColor: donutColors,
+          borderWidth: 2,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '68%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 14,
+              font: { size: 11, weight: '600' },
+              color: '#94a3b8',
+              usePointStyle: true,
+              pointStyle: 'circle'
+            }
+          },
+          tooltip: {
+            backgroundColor: '#0f1629',
+            borderColor: '#1e2d4d',
+            borderWidth: 1,
+            titleColor: '#e2e8f0',
+            bodyColor: '#94a3b8',
+            callbacks: {
+              label: ctx => ` Severity: ${ctx.parsed.toFixed(2)}`
+            }
+          }
+        }
+      }
+    });
+
+    // ── Horizontal Bar Chart ─────────────────────────────────
+    new Chart($('barChart'), {
+      type: 'bar',
+      data: {
+        labels: donutLabels,
+        datasets: [{
+          label: 'Severity Score',
+          data: donutValues,
+          backgroundColor: donutColors.map(c => c + '33'),
+          borderColor: donutColors,
+          borderWidth: 2,
+          borderRadius: 6,
+          borderSkipped: false
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#0f1629',
+            borderColor: '#1e2d4d',
+            borderWidth: 1,
+            titleColor: '#e2e8f0',
+            bodyColor: '#94a3b8',
+            callbacks: {
+              label: ctx => ` ${ctx.parsed.x.toFixed(2)}`
+            }
+          }
+        },
+        scales: {
+          x: {
+            min: 0, max: 1,
+            grid: { color: '#1e2d4d' },
+            ticks: {
+              color: '#64748b',
+              font: { size: 11 },
+              callback: v => v.toFixed(1)
+            }
+          },
+          y: {
+            grid: { display: false },
+            ticks: {
+              color: '#e2e8f0',
+              font: { size: 12, weight: '600' }
+            }
+          }
+        }
+      }
+    });
+
+    // ── Z-Score Gauge ────────────────────────────────────────
+    $('zscore-big').textContent = zScore.toFixed(2);
+    const maxZ = 3.0;
+    const pct = Math.min(zScore / maxZ * 100, 100);
+    // Delay for animation
+    setTimeout(() => {
+      $('zscore-fill').style.width = pct + '%';
+      $('zscore-marker').style.left = pct + '%';
+    }, 300);
+
+    // ── Footer ───────────────────────────────────────────────
+    $('footer-product').textContent = `${meta.name || ''} v${meta.version || ''} — ${meta.provider || ''}`;
+    const shields = infra.shield_log || [];
+    const shieldList = $('shield-list');
+    shields.forEach(s => {
+      const el = document.createElement('div');
+      el.className = 'shield-item';
+      el.textContent = s;
+      shieldList.appendChild(el);
+    });
+  }
+
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
 
   function showError(msg) {
     hide('loading');
@@ -263,119 +676,8 @@
     show('error');
   }
 
-  // Guess a good "title" field from a record
-  const TITLE_KEYS = ['name','title','product_name','商品名','名前','id','code'];
-  function guessTitle(record) {
-    for (const k of TITLE_KEYS) {
-      if (record[k] != null && String(record[k]).trim()) return String(record[k]);
-    }
-    const first = Object.values(record).find(v => v != null && typeof v !== 'object');
-    return first != null ? String(first) : '(no title)';
-  }
-
-  // Format a single field value
-  function formatValue(val) {
-    if (val === null || val === undefined) return { text: 'null', cls: 'null-val' };
-    if (typeof val === 'boolean') return { text: val ? 'true' : 'false', cls: val ? 'bool-true' : 'bool-false' };
-    if (typeof val === 'number') return { text: val.toLocaleString(), cls: 'num' };
-    if (typeof val === 'object') return { text: JSON.stringify(val), cls: '' };
-    return { text: String(val), cls: '' };
-  }
-
-  // ── Card builder ─────────────────────────────────────────────
-  function buildCard(record, index) {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.dataset.search = JSON.stringify(record).toLowerCase();
-
-    const header = document.createElement('div');
-    header.className = 'card-header';
-    header.innerHTML = `<span class="card-index">#${index + 1}</span><span class="card-title">${escHtml(guessTitle(record))}</span>`;
-
-    const body = document.createElement('div');
-    body.className = 'card-body';
-
-    Object.entries(record).forEach(([key, val]) => {
-      const { text, cls } = formatValue(val);
-      const field = document.createElement('div');
-      field.className = 'field';
-      field.innerHTML = `<span class="field-key">${escHtml(key)}</span><span class="field-val ${cls}">${escHtml(text)}</span>`;
-      body.appendChild(field);
-    });
-
-    card.appendChild(header);
-    card.appendChild(body);
-    return card;
-  }
-
-  function escHtml(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  // ── Render ────────────────────────────────────────────────────
-  let allCards = [];
-
-  function render(data) {
-    hide('loading');
-
-    const records = Array.isArray(data)
-      ? data
-      : (data.products || data.items || data.data || null);
-
-    // Raw JSON
-    $('raw-pre').textContent = JSON.stringify(data, null, 2);
-    show('raw-toggle', 'block');
-
-    if (!records || !Array.isArray(records) || records.length === 0) {
-      // Fallback: just show raw JSON prominently
-      show('raw-toggle', 'block');
-      $('raw-toggle').open = true;
-      return;
-    }
-
-    // Stats
-    const keys = [...new Set(records.flatMap(r => Object.keys(r)))];
-    $('stat-total').textContent = records.length.toLocaleString();
-    $('stat-fields').textContent = keys.length;
-    $('stat-updated').textContent = new Date().toLocaleDateString('ja-JP');
-    show('stats', 'flex');
-
-    // Badge
-    $('badge').textContent = records.length + ' 件';
-    show('badge', 'inline-block');
-
-    // Toolbar
-    show('toolbar', 'flex');
-    updateCountLabel(records.length, records.length);
-
-    // Cards
-    const grid = $('grid');
-    allCards = records.map((rec, i) => {
-      const card = buildCard(rec, i);
-      grid.appendChild(card);
-      return card;
-    });
-  }
-
-  // ── Search / filter ──────────────────────────────────────────
-  function updateCountLabel(shown, total) {
-    $('count-label').textContent = shown === total ? `全 ${total} 件` : `${shown} / ${total} 件`;
-  }
-
-  $('search').addEventListener('input', function () {
-    const q = this.value.trim().toLowerCase();
-    let shown = 0;
-    allCards.forEach(card => {
-      const match = !q || card.dataset.search.includes(q);
-      card.style.display = match ? '' : 'none';
-      if (match) shown++;
-    });
-    $('no-results').style.display = shown === 0 ? 'block' : 'none';
-    updateCountLabel(shown, allCards.length);
-  });
-
   // ── Fetch ─────────────────────────────────────────────────────
-  fetch(DATA_URL)
+  fetch('./commercial_product_v1.json')
     .then(res => {
       if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
       return res.json();
@@ -384,9 +686,7 @@
     .catch(err => {
       const msg = err.name === 'SyntaxError'
         ? 'JSONの形式が不正です: ' + err.message
-        : err.message.includes('404')
-          ? 'ファイルが見つかりません (404)'
-          : '読み込みに失敗しました: ' + err.message;
+        : 'データの読み込みに失敗しました: ' + err.message;
       showError(msg);
     });
 </script>
